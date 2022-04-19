@@ -6,12 +6,14 @@ plugins {
     id "com.diffplug.spotless" version "6.2.1"
 }
 
+
+
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 targetCompatibility = '11'
 
 jar {
-    enabled = false
+    enabled = true
 }
 
 spotless {
