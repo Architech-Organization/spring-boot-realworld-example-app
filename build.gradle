@@ -6,17 +6,7 @@ plugins {
     id "com.diffplug.spotless" version "6.2.1"
 }
 
-
-
-
-
-
-
-
-
 version = '0.0.1-SNAPSHOT'
-username = 'test'
-password = 'test'
 sourceCompatibility = '11'
 targetCompatibility = '11'
 
