@@ -49,6 +49,6 @@ jobs:
         ls -lah
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: springboot-rachdemo
+        app-name: springboot-essentials-demo
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} 
         package: 'build/libs/*.jar'
