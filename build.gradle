@@ -11,7 +11,7 @@ sourceCompatibility = '11'
 targetCompatibility = '11'
 
 jar {
-    enabled = false
+    enabled = true
 }
 
 spotless {
