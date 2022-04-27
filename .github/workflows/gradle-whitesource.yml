@@ -47,8 +47,12 @@ jobs:
         WS_WSS_URL: https://app.whitesourcesoftware.com/agent
         WS_PRODUCTNAME: ${{github.event.repository.name}}
         WS_PROJECTNAME: ${{github.ref}}
-        WS_FILESYSTEMSCAN: false
+        WS_FILESYSTEMSCAN: true
+        WS_GENERATEPROJECTDETAILSJSON: true
+        WS_UPDATEINVENTORY: true #(defaults to true)
+
       run: |
+        sudo apt-get install jq curl
         echo Downloading WhiteSource Unified Agent
         curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
         if [[ "$(curl -sL https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar.sha256)" != "$(sha256sum wss-unified-agent.jar)" ]] ; then
@@ -58,6 +62,26 @@ jobs:
           echo Starting WhiteSource Scan
           java -jar wss-unified-agent.jar
         fi
+        export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+        export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+        #RiskReport-Example
+        curl --output ./whitesource/riskreport.pdf --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProjectRiskReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
+        #InventoryReport-Example
+        curl --output ./whitesource/inventoryreport.xlsx --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProductInventoryReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
+        #DueDiligenceReport-Example
+        curl --output ./whitesource/duediligencereport.pdf --request POST $WS_URL'/api/v1.3' --header 'Content-Type: application/json'  --data-raw '{"requestType":"getProjectDueDiligenceReport","userKey":"$WS_USERKEY","projectToken":"$WS_PROJECTTOKEN"}'
+        echo "*****************************"
+        ls -a ./whitesource
+        chmod +x ./Scripts/list-project-alerts.sh
+
+    - name: Archive Whitesource results
+      uses: actions/upload-artifact@v3
+      with:
+        name: Whitesource reports
+        path: ./whitesource
+
+
+
     # - uses: azure/webapps-deploy@v2
     #   with:
     #     app-name: second-springboot-rachdemo
