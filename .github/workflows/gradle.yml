@@ -42,7 +42,7 @@ jobs:
       run: ./gradlew build --info
 
     - name: Deploy the backend for sample app
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
       with:
         app-name: adp-app-api-qa
