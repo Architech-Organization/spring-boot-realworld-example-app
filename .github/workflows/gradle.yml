@@ -45,6 +45,6 @@ jobs:
       if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: adp-app-api-qa
+        app-name: adp-app-api-backend-qa
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} 
         package: 'build/libs/*.jar'
